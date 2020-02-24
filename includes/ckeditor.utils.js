@@ -282,6 +282,11 @@ if (typeof window.CKEDITOR_BASEPATH === 'undefined') {
       Drupal.behaviors.textarea.attach(context);
     }
 
+    // Manually set the cache-busting string to the same value as Drupal.
+    if (typeof(Drupal.settings.ckeditor.timestamp) != 'undefined') {
+      CKEDITOR.timestamp = Drupal.settings.ckeditor.timestamp;
+    }
+
     $(context).find("textarea.ckeditor-mod:not(.ckeditor-processed)").each(function () {
       var ta_id=$(this).attr("id");
       if (CKEDITOR.instances && typeof(CKEDITOR.instances[ta_id]) != 'undefined'){
