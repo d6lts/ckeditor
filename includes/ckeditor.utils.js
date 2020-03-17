@@ -37,7 +37,9 @@ if (typeof window.CKEDITOR_BASEPATH === 'undefined') {
     $("#" + textarea_id).addClass("ckeditor-processed");
 
     var textarea_settings = false;
-    ckeditor_obj.input_formats[ckeditor_obj.elements[textarea_id]].toolbar = eval(ckeditor_obj.input_formats[ckeditor_obj.elements[textarea_id]].toolbar);
+    if (typeof(ckeditor_obj.input_formats[ckeditor_obj.elements[textarea_id]].toolbar) != 'object') {
+      ckeditor_obj.input_formats[ckeditor_obj.elements[textarea_id]].toolbar = Drupal.ckeditorToolbarToArray(ckeditor_obj.input_formats[ckeditor_obj.elements[textarea_id]].toolbar);
+    }
     textarea_settings = ckeditor_obj.input_formats[ckeditor_obj.elements[textarea_id]];
 
     var drupalTopToolbar = $('#toolbar, #admin-menu', Drupal.overlayChild ? window.parent.document : document);
@@ -123,7 +125,16 @@ if (typeof window.CKEDITOR_BASEPATH === 'undefined') {
 
     if (typeof textarea_settings['js_conf'] != 'undefined'){
       for (var add_conf in textarea_settings['js_conf']){
-        textarea_settings[add_conf] = eval(textarea_settings['js_conf'][add_conf]);
+        var data;
+        if (add_conf == 'toolbar') {
+          data = Drupal.ckeditorToolbarToArray(textarea_settings['js_conf'][add_conf]);
+        } else if (typeof textarea_settings['js_conf'][add_conf] === "boolean" ) {
+          data = textarea_settings['js_conf'][add_conf];
+        } else {
+          data = JSON.parse(textarea_settings['js_conf'][add_conf].replace(/'/g, '"'));
+        }
+
+        textarea_settings[add_conf] = data;
       }
     }
 
@@ -141,7 +152,7 @@ if (typeof window.CKEDITOR_BASEPATH === 'undefined') {
       textarea_settings = Drupal.ckeditorLoadPlugins(textarea_settings);
       Drupal.ckeditorInstance = CKEDITOR.replace(textarea_id, textarea_settings);
     }
-  }
+  };
 
   Drupal.ckeditorOn = function(textarea_id, run_filter) {
 
@@ -255,6 +266,17 @@ if (typeof window.CKEDITOR_BASEPATH === 'undefined') {
       return false;
     }
   };
+
+  if (typeof(Drupal.ckeditorToolbarToArray) == 'undefined') {
+    Drupal.ckeditorToolbarToArray = function (toolbar) {
+      toolbar = toolbar.replace(/\r?\n|\r/gmi, '')
+          .replace(/\s/gmi, '')
+          .replace(/([a-zA-Z0-9]+?):/g, '"$1":')
+          .replace(/'/g, '"');
+
+      return JSON.parse(toolbar);
+    };
+  }
 
   /**
  * Ajax support
