@@ -1,6 +1,20 @@
 7.x-1.x-dev
 Development snapshot
 
+2020-03-17
+New stable release: 7.x-1.19
+
+[#2349885] by hass, Dieter Geiling: Add config.smiley_path for relative image urls
+[#2993053] by stefan.korn: DocBlock missing for hook_user_presave()
+[#2211217] by bwaindwain, gifad: Using "theme css", CKEditor fails to translate URI to valid URL
+[#172229] by vokiel: Update CKEditor to 4.14.0
+[#169464] by vokiel: Fix (remove) the eval() usage inside JavaScript files.
+[#2679179] by Dave Reid, ron_s: CKEditor uses separate cache-busting query string from Drupal's
+[#2795603] by hgoto: drush ckeditor-download command raises warning with undefined offset
+[#2947109] by jstoller: New default CKEditor skin not recognized
+[#2898012] bump CKEditor to 4.9.2
+[#2790539] by Johnny vd Laar: prepare callback is optional, ckeditor_filter_xss causes notices
+
 2017-06-26
 New stable release: 7.x-1.18
 
