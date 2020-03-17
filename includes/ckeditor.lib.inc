@@ -1098,11 +1098,21 @@ function _ckeditor_add_css_from_theme($current_theme, &$css_files) {
     $color_paths = variable_get('color_' . $current_theme . '_stylesheets', array());
     if (defined('LANGUAGE_RTL') && $language->direction == LANGUAGE_RTL) {
       if (!empty($color_paths[1])) {
-        $css_files[] = $host . $color_paths[1] . $query_string;
+        if (substr($color_paths[0], 0, 9) == 'public://') {
+          $css_files[] = file_create_url($color_paths[1]) . $query_string;
+        }
+        else {
+          $css_files[] = $host . $color_paths[1] . $query_string;
+        }
       }
     }
     elseif (!empty($color_paths[0])) {
-      $css_files[] = $host . $color_paths[0] . $query_string;
+      if (substr($color_paths[0], 0, 9) == 'public://') {
+        $css_files[] = file_create_url($color_paths[0]) . $query_string;
+      }
+      else {
+        $css_files[] = $host . $color_paths[0] . $query_string;
+      }
     }
   }
   else {
